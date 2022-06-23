@@ -5,7 +5,7 @@ import random
 a = []
 title = []
 link = []
-action = 'https://myanimelist.net/anime/genre/1/Action'
+# action = 'https://myanimelist.net/anime/genre/1/Action'
 
 
 def anime_parser(url):
@@ -27,5 +27,4 @@ def anime(url, n, i=0):
 
 
 if __name__ == "__main__":
-    n = random.randint(0, 99)
-    print(anime(action, n, 1) + '\n' + anime(action, n, 0))
+    pass

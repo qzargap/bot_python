@@ -1,3 +1,4 @@
+import random
 import sqlite3
 db = sqlite3.connect('users.db', timeout=10, check_same_thread=False)
 sql = db.cursor()
@@ -16,51 +17,37 @@ author = 'id_users'
 db.commit()
 
 
-def update():
-    sql.execute(sqlite_select_query)
-    rec = sql.fetchall()
-    return rec
-
-
-def user_sql(log, pas, id_users):   # СОЗДАНИЕ НОВОГО ПОЛЬЗОВАТЕЛЯ
-    sql.execute("INSERT INTO users VALUES(?, ?, ?, ?, ?)", (update()[-1][0]+1, log, pas, 1, id_users))
-    db.commit()
-
-
-def examination(log, pas, id_users):    # ПРОВЕРКА ЛОГИНА НА УНИКАЛЬНОСТЬ
-    if log[0] == '/' or pas[0] == '/':
-        return '/'
-    if log in [update()[x][1] for x in range(len(update()))]:
-        return "Такой логин уже существует"
-    user_sql(log, pas, id_users)
+def update():   # ОБНОВЛЕНИЕ БАЗЫ ДАННЫХ
+    return sql.execute(sqlite_select_query).fetchall()
 
 
 def money(login):   # ФАРМ ДЕНЕГ
-    for i in range(len(update())):
-        if login == update()[i][1]:
-            ann(update()[i][3] + 1, update()[i][0], i)
-
-
-def id_user(log):   # БАЛАНС ПОЛЬЗОВАТЕЛЯ
-    for i in range(len(update())):
-        if log == update()[i][1]:
-            return update()[i][3]
-
-
-def ann(mone, id_login, i):
-    print(update()[i][3], mone)
-    sql_update_query = f"""Update users set money = {update()[i][3]+1} where id = {id_login}"""
-    sql.execute(sql_update_query)
+    a = int(str([x for x in range(len(update())) if login == update()[x][1]])[1:2])
+    sql.execute(f"""Update users set money = {update()[a][3] + 1} where id = {update()[a][0]}""")
     db.commit()
 
 
+def id_user(log):   # БАЛАНС ПОЛЬЗОВАТЕЛЯ
+    a = int(str([x for x in range(len(update()))if log == update()[x][1]])[1:2])
+    return update()[a][3]
+
+
 def come_users(login, password):    # ПОЛЬЗОВАТЕЛЬ ВХОДИТ
-    for i in range(len(update())):
-        if login == update()[i][1] and password == update()[i][2]:
-            return f"{update()[i][1]} Вы успешно вошли"
-    return "Неправильный логин или пароль"
+    try:
+        a = int(str([x for x in range(len(update())) if login == update()[x][1] and password == update()[x][2]])[1:2])
+        return f"{update()[a][1]} Вы успешно вошли"
+    except:
+        return "Неправильный логин или пароль"
+
+
+def examination(log, pas, id_users):    # СОЗДАНИЕ НОВОГО ПОЛЬЗОВАТЕЛЯ
+    if log[0] == '/' or pas[0] == '/':
+        return '/'
+    elif log in [update()[x][1] for x in range(len(update()))]:
+        return "Такой логин уже существует"
+    sql.execute("INSERT INTO users VALUES(?, ?, ?, ?, ?)", (update()[-1][0] + 1, log, pas, 1, id_users))
+    db.commit()
 
 
 if __name__ == "__main__":
-    if 'oleg' in [update()[x][1] for x in range(len(update()))]:
-        print("Существует")
+    pass
