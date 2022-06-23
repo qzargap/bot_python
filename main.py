@@ -2,10 +2,11 @@ from test import *
 from hisql import *
 from dbusers import examination, come_users, id_user, money, us_log
 from telebot import types
+from tok import tok
 import telebot
 import numpy
 import random
-bot = telebot.TeleBot('5596284668:AAFm66yYGM5uE4vlH9P-O7YPEdoa5zd_v88')
+bot = telebot.TeleBot(tok)
 
 a = ''
 log = ''
